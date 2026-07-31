@@ -1,8 +1,9 @@
 @props(['href' => null])
 
 @php
-    $classes = 'block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm '
-        . ($href ? 'transition hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500' : '');
+    $base = 'block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900';
+    $interactive = 'transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-600 hover:-translate-y-0.5 hover:shadow-soft';
+    $classes = $base . ' ' . ($href ? $interactive : 'shadow-soft');
 @endphp
 
 @if ($href)

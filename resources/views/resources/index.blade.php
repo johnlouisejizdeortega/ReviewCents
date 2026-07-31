@@ -25,15 +25,17 @@
         @if ($resources->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($resources as $resource)
-                    <x-card :href="route('resources.show', $resource)" class="p-5">
-                        <div class="flex items-center justify-between">
-                            <x-badge color="indigo">{{ $resource->category->name }}</x-badge>
-                            <x-badge>{{ ucfirst($resource->type) }}</x-badge>
-                        </div>
-                        <h3 class="mt-3 font-semibold">{{ $resource->title }}</h3>
-                        <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $resource->description }}</p>
-                        <div class="mt-3"><x-stars :rating="$resource->avg_rating" :count="$resource->reviews_count" /></div>
-                    </x-card>
+                    <x-reveal :delay="$loop->index % 6 * 60" class="h-full">
+                        <x-card :href="route('resources.show', $resource)" class="p-5 h-full">
+                            <div class="flex items-center justify-between">
+                                <x-badge>{{ $resource->category->name }}</x-badge>
+                                <x-badge>{{ ucfirst($resource->type) }}</x-badge>
+                            </div>
+                            <h3 class="mt-3 font-semibold tracking-tightish">{{ $resource->title }}</h3>
+                            <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $resource->description }}</p>
+                            <div class="mt-3"><x-stars :rating="$resource->avg_rating" :count="$resource->reviews_count" /></div>
+                        </x-card>
+                    </x-reveal>
                 @endforeach
             </div>
             <div class="mt-6">{{ $resources->links() }}</div>

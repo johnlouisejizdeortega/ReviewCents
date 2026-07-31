@@ -14,18 +14,20 @@
         @if ($challenges->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($challenges as $challenge)
-                    <x-card :href="route('challenges.show', $challenge)" class="p-5">
-                        <div class="flex gap-2">
-                            <x-badge :color="$challenge->type === 'mission' ? 'blue' : 'indigo'">{{ ucfirst($challenge->type) }}</x-badge>
-                            <x-badge :color="['easy'=>'green','medium'=>'amber','hard'=>'red'][$challenge->difficulty]">{{ ucfirst($challenge->difficulty) }}</x-badge>
-                        </div>
-                        <h3 class="mt-3 font-semibold">{{ $challenge->title }}</h3>
-                        <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $challenge->description }}</p>
-                        <div class="mt-3 flex items-center justify-between text-xs text-gray-400">
-                            <span>{{ $challenge->points }} pts</span>
-                            <span>{{ $challenge->submissions_count }} submissions</span>
-                        </div>
-                    </x-card>
+                    <x-reveal :delay="$loop->index % 6 * 60" class="h-full">
+                        <x-card :href="route('challenges.show', $challenge)" class="p-5 h-full">
+                            <div class="flex gap-2">
+                                <x-badge :color="$challenge->type === 'mission' ? 'blue' : 'indigo'">{{ ucfirst($challenge->type) }}</x-badge>
+                                <x-badge>{{ ucfirst($challenge->difficulty) }}</x-badge>
+                            </div>
+                            <h3 class="mt-3 font-semibold tracking-tightish">{{ $challenge->title }}</h3>
+                            <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $challenge->description }}</p>
+                            <div class="mt-3 flex items-center justify-between text-xs font-mono text-gray-400">
+                                <span>{{ $challenge->points }} pts</span>
+                                <span>{{ $challenge->submissions_count }} submissions</span>
+                            </div>
+                        </x-card>
+                    </x-reveal>
                 @endforeach
             </div>
             <div class="mt-6">{{ $challenges->links() }}</div>

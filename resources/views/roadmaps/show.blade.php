@@ -31,7 +31,7 @@
                             <form method="POST" action="{{ route('progress.toggle', $step) }}">
                                 @csrf
                                 <button type="submit" class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 {{ $done ? 'bg-gray-900 dark:bg-white border-gray-900 dark:border-white text-white' : 'border-gray-300 dark:border-gray-600 text-transparent hover:border-gray-400' }}">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                                    <x-lucide-check class="size-4" stroke-width="3" />
                                 </button>
                             </form>
                         @else
@@ -56,7 +56,7 @@
             <div class="mt-8">
                 <x-card class="p-6 bg-gray-100 dark:bg-gray-800">
                     <div class="flex items-start gap-4">
-                        <svg class="h-8 w-8 shrink-0 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        <x-lucide-file-text class="size-8 shrink-0 text-gray-900 dark:text-white" />
                         <div class="flex-1">
                             <h2 class="text-lg font-bold">Final test: {{ $roadmap->quiz->title }}</h2>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">

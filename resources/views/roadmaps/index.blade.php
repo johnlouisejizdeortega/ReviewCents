@@ -15,26 +15,28 @@
         @if ($roadmaps->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($roadmaps as $roadmap)
-                    <x-card :href="route('roadmaps.show', $roadmap)" class="p-5">
-                        <div class="flex items-center justify-between">
-                            <x-badge color="indigo">{{ $roadmap->category->name }}</x-badge>
-                            <x-badge :color="['beginner'=>'green','intermediate'=>'amber','advanced'=>'red'][$roadmap->level]">{{ ucfirst($roadmap->level) }}</x-badge>
-                        </div>
-                        <h3 class="mt-3 font-semibold">{{ $roadmap->title }}</h3>
-                        <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $roadmap->description }}</p>
-                        <p class="mt-3 text-xs text-gray-400">{{ $roadmap->steps_count }} steps · test included</p>
-                        @auth
-                            @php $c = $roadmap->completionFor(auth()->user()); @endphp
-                            @if ($c > 0)
-                                <div class="mt-3">
-                                    <div class="h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                                        <div class="h-full bg-gray-900 dark:bg-white" style="width: {{ $c }}%"></div>
+                    <x-reveal :delay="$loop->index % 6 * 60" class="h-full">
+                        <x-card :href="route('roadmaps.show', $roadmap)" class="p-5 h-full">
+                            <div class="flex items-center justify-between">
+                                <x-badge>{{ $roadmap->category->name }}</x-badge>
+                                <x-badge>{{ ucfirst($roadmap->level) }}</x-badge>
+                            </div>
+                            <h3 class="mt-3 font-semibold tracking-tightish">{{ $roadmap->title }}</h3>
+                            <p class="mt-1 text-sm text-gray-500 line-clamp-2">{{ $roadmap->description }}</p>
+                            <p class="mt-3 text-xs font-mono text-gray-400">{{ $roadmap->steps_count }} steps · test included</p>
+                            @auth
+                                @php $c = $roadmap->completionFor(auth()->user()); @endphp
+                                @if ($c > 0)
+                                    <div class="mt-3">
+                                        <div class="h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                            <div class="h-full bg-gray-900 dark:bg-white" style="width: {{ $c }}%"></div>
+                                        </div>
+                                        <p class="mt-1 text-xs font-mono text-gray-400">{{ $c }}% complete</p>
                                     </div>
-                                    <p class="mt-1 text-xs text-gray-400">{{ $c }}% complete</p>
-                                </div>
-                            @endif
-                        @endauth
-                    </x-card>
+                                @endif
+                            @endauth
+                        </x-card>
+                    </x-reveal>
                 @endforeach
             </div>
             <div class="mt-6">{{ $roadmaps->links() }}</div>

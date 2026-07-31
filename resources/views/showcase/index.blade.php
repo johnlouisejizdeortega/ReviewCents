@@ -15,22 +15,24 @@
         @if ($projects->count())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($projects as $project)
-                    <x-card :href="route('showcase.show', $project)" class="overflow-hidden">
-                        <div class="aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                            @if ($project->imageUrl())
-                                <img src="{{ $project->imageUrl() }}" alt="" class="h-full w-full object-cover">
-                            @else
-                                <x-placeholder-icon size="h-10 w-10" />
-                            @endif
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold">{{ $project->title }}</h3>
-                            <div class="mt-1 flex items-center gap-2">
-                                <img src="{{ $project->user->avatarUrl() }}" class="h-5 w-5 rounded-full object-cover" alt="">
-                                <span class="text-xs text-gray-500">{{ $project->user->name }}</span>
+                    <x-reveal :delay="$loop->index % 6 * 60" class="h-full">
+                        <x-card :href="route('showcase.show', $project)" class="overflow-hidden h-full">
+                            <div class="aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                @if ($project->imageUrl())
+                                    <img src="{{ $project->imageUrl() }}" alt="" class="h-full w-full object-cover">
+                                @else
+                                    <x-placeholder-icon size="size-10" />
+                                @endif
                             </div>
-                        </div>
-                    </x-card>
+                            <div class="p-4">
+                                <h3 class="font-semibold tracking-tightish">{{ $project->title }}</h3>
+                                <div class="mt-1 flex items-center gap-2">
+                                    <img src="{{ $project->user->avatarUrl() }}" class="h-5 w-5 rounded-full object-cover" alt="">
+                                    <span class="text-xs text-gray-500">{{ $project->user->name }}</span>
+                                </div>
+                            </div>
+                        </x-card>
+                    </x-reveal>
                 @endforeach
             </div>
             <div class="mt-6">{{ $projects->links() }}</div>
