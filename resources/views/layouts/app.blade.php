@@ -19,6 +19,20 @@
         </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        {{-- Safety net: if Alpine fails to load for any reason, never leave the
+             scroll-reveal content hidden — show everything. --}}
+        <script>
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    if (!window.Alpine) {
+                        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('reveal-in'); });
+                        document.querySelectorAll('[x-cloak]').forEach(function (el) { el.removeAttribute('x-cloak'); });
+                    }
+                }, 1500);
+            });
+        </script>
+
         @stack('head')
     </head>
     <body class="h-full font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-x-hidden">
