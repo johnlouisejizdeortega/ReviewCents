@@ -8,6 +8,7 @@ use App\Models\Challenge;
 use App\Models\ChallengeSubmission;
 use App\Models\Conversation;
 use App\Models\LessonCard;
+use App\Models\LessonProgress;
 use App\Models\Message;
 use App\Models\Progress;
 use App\Models\Project;
@@ -26,11 +27,15 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Idempotent demo seeder — safe to run repeatedly (e.g. after adding new
+     * content). Every record is matched on a natural key, and child rows
+     * (cards / quiz questions) are refreshed, so re-running never duplicates
+     * or hits a unique-constraint error. No factories/Faker (runs in prod).
+     */
     public function run(): void
     {
         // ---- Users -------------------------------------------------------
-        // NOTE: no factories/Faker here — this seeder must run in production
-        // (Laravel Cloud installs with --no-dev, so Faker is unavailable).
         $admin = User::firstOrCreate(
             ['email' => 'admin@reviewcents.test'],
             [
@@ -90,11 +95,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Web Design', 'description' => 'UI/UX, layout, and visual design.'],
             ['name' => 'Tools', 'description' => 'Editors, CLIs and developer tooling.'],
             ['name' => 'Bootcamps', 'description' => 'Structured intensive programs.'],
-        ])->map(fn ($c) => Category::create([
-            'name' => $c['name'],
-            'slug' => Str::slug($c['name']),
-            'description' => $c['description'],
-        ]));
+        ])->map(fn ($c) => Category::firstOrCreate(
+            ['slug' => Str::slug($c['name'])],
+            ['name' => $c['name'], 'description' => $c['description']],
+        ));
 
         $webDev = $categories->firstWhere('name', 'Web Development');
         $webDesign = $categories->firstWhere('name', 'Web Design');
@@ -113,27 +117,29 @@ class DatabaseSeeder extends Seeder
         ];
 
         $resources = collect($resourceData)->map(function ($r) use ($admin) {
-            return Resource::create([
-                'category_id' => $r[1]->id,
-                'submitted_by' => $admin->id,
-                'title' => $r[0],
-                'slug' => Str::slug($r[0]),
-                'description' => $r[3],
-                'url' => $r[4],
-                'type' => $r[2],
-            ]);
+            return Resource::updateOrCreate(
+                ['slug' => Str::slug($r[0])],
+                [
+                    'category_id' => $r[1]->id,
+                    'submitted_by' => $admin->id,
+                    'title' => $r[0],
+                    'description' => $r[3],
+                    'url' => $r[4],
+                    'type' => $r[2],
+                ],
+            );
         });
 
-        // ---- Reviews (and recompute avg) ---------------------------------
+        // ---- Reviews (only seed a resource that has none) -----------------
         foreach ($resources as $resource) {
-            $reviewers = $allLearners->random(min(4, $allLearners->count()));
-            foreach ($reviewers as $reviewer) {
-                Review::create([
-                    'user_id' => $reviewer->id,
-                    'resource_id' => $resource->id,
-                    'rating' => rand(3, 5),
-                    'body' => 'Really helpful resource, learned a lot. Would recommend to other learners.',
-                ]);
+            if ($resource->reviews()->doesntExist()) {
+                $reviewers = $allLearners->random(min(4, $allLearners->count()));
+                foreach ($reviewers as $reviewer) {
+                    Review::firstOrCreate(
+                        ['user_id' => $reviewer->id, 'resource_id' => $resource->id],
+                        ['rating' => rand(3, 5), 'body' => 'Really helpful resource, learned a lot. Would recommend to other learners.'],
+                    );
+                }
             }
             $resource->recalculateRating();
         }
@@ -248,100 +254,103 @@ class DatabaseSeeder extends Seeder
             ['Clone a Landing Page', $webDesign, 'medium', 'challenge', 'Recreate a landing page of your choice pixel-perfect.'],
             ['Build a To-Do App', $webDev, 'medium', 'mission', 'Full CRUD to-do app with local storage or a backend.'],
             ['Design a Color System', $webDesign, 'hard', 'mission', 'Create an accessible color system with light and dark modes.'],
-        ])->map(fn ($c) => Challenge::create([
-            'category_id' => $c[1]->id,
-            'title' => $c[0],
-            'slug' => Str::slug($c[0]),
-            'description' => $c[4],
-            'difficulty' => $c[2],
-            'type' => $c[3],
-            'points' => ['easy' => 10, 'medium' => 25, 'hard' => 50][$c[2]],
-        ]));
+        ])->map(fn ($c) => Challenge::firstOrCreate(
+            ['slug' => Str::slug($c[0])],
+            [
+                'category_id' => $c[1]->id,
+                'title' => $c[0],
+                'description' => $c[4],
+                'difficulty' => $c[2],
+                'type' => $c[3],
+                'points' => ['easy' => 10, 'medium' => 25, 'hard' => 50][$c[2]],
+            ],
+        ));
 
         // A reviewed challenge submission by the demo user
-        ChallengeSubmission::create([
-            'user_id' => $demo->id,
-            'challenge_id' => $challenges->first()->id,
-            'submission_url' => 'https://github.com/demo/responsive-navbar',
-            'notes' => 'Built with Tailwind, fully responsive with Alpine toggle.',
-            'status' => 'reviewed',
-            'rating' => 4,
-            'feedback' => 'Great work! Consider adding keyboard accessibility to the menu.',
-            'reviewed_by' => $admin->id,
-            'reviewed_at' => now(),
-        ]);
+        ChallengeSubmission::firstOrCreate(
+            ['user_id' => $demo->id, 'challenge_id' => $challenges->first()->id],
+            [
+                'submission_url' => 'https://github.com/demo/responsive-navbar',
+                'notes' => 'Built with Tailwind, fully responsive with Alpine toggle.',
+                'status' => 'reviewed',
+                'rating' => 4,
+                'feedback' => 'Great work! Consider adding keyboard accessibility to the menu.',
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
+            ],
+        );
 
         // ---- Admin-assigned custom tasks ---------------------------------
-        Assignment::create([
-            'assigned_by' => $admin->id,
-            'user_id' => $demo->id,
-            'title' => 'Rebuild your portfolio homepage',
-            'description' => 'Apply the design principles from the Web Design roadmap to rebuild your portfolio hero section. Submit a link when done.',
-            'type' => 'mission',
-            'due_date' => now()->addDays(7),
-            'status' => 'assigned',
-        ]);
+        Assignment::firstOrCreate(
+            ['user_id' => $demo->id, 'title' => 'Rebuild your portfolio homepage'],
+            [
+                'assigned_by' => $admin->id,
+                'description' => 'Apply the design principles from the Web Design roadmap to rebuild your portfolio hero section. Submit a link when done.',
+                'type' => 'mission',
+                'due_date' => now()->addDays(7),
+                'status' => 'assigned',
+            ],
+        );
 
-        Assignment::create([
-            'assigned_by' => $admin->id,
-            'user_id' => $demo->id,
-            'title' => 'Accessibility audit',
-            'description' => 'Run an accessibility audit on any project and list 5 improvements.',
-            'type' => 'task',
-            'due_date' => now()->subDays(2),
-            'status' => 'reviewed',
-            'submission' => 'https://github.com/demo/a11y-audit',
-            'submitted_at' => now()->subDays(3),
-            'rating' => 5,
-            'feedback' => 'Excellent, thorough audit. Nicely prioritized fixes.',
-            'reviewed_at' => now()->subDay(),
-        ]);
+        Assignment::firstOrCreate(
+            ['user_id' => $demo->id, 'title' => 'Accessibility audit'],
+            [
+                'assigned_by' => $admin->id,
+                'description' => 'Run an accessibility audit on any project and list 5 improvements.',
+                'type' => 'task',
+                'due_date' => now()->subDays(2),
+                'status' => 'reviewed',
+                'submission' => 'https://github.com/demo/a11y-audit',
+                'submitted_at' => now()->subDays(3),
+                'rating' => 5,
+                'feedback' => 'Excellent, thorough audit. Nicely prioritized fixes.',
+                'reviewed_at' => now()->subDay(),
+            ],
+        );
 
         // ---- Projects (showcase) -----------------------------------------
-        Project::create([
-            'user_id' => $demo->id,
-            'title' => 'Weather Dashboard',
-            'description' => 'A responsive weather app consuming a public API.',
-            'live_url' => 'https://example.com/weather',
-            'repo_url' => 'https://github.com/demo/weather',
-            'tags' => 'JavaScript, API, CSS',
-        ]);
+        Project::firstOrCreate(
+            ['user_id' => $demo->id, 'title' => 'Weather Dashboard'],
+            [
+                'description' => 'A responsive weather app consuming a public API.',
+                'live_url' => 'https://example.com/weather',
+                'repo_url' => 'https://github.com/demo/weather',
+                'tags' => 'JavaScript, API, CSS',
+            ],
+        );
 
         foreach ($users->take(3) as $u) {
-            Project::create([
-                'user_id' => $u->id,
-                'title' => 'Portfolio Site',
-                'description' => 'Personal portfolio built while learning on ReviewCents.',
-                'live_url' => 'https://example.com/'.$u->username,
-                'repo_url' => 'https://github.com/'.$u->username.'/portfolio',
-                'tags' => 'HTML, CSS, Tailwind',
-            ]);
+            Project::firstOrCreate(
+                ['user_id' => $u->id, 'title' => 'Portfolio Site'],
+                [
+                    'description' => 'Personal portfolio built while learning on ReviewCents.',
+                    'live_url' => 'https://example.com/'.$u->username,
+                    'repo_url' => 'https://github.com/'.$u->username.'/portfolio',
+                    'tags' => 'HTML, CSS, Tailwind',
+                ],
+            );
         }
 
-        // ---- Chat conversation -------------------------------------------
-        $conversation = Conversation::create(['is_group' => false]);
-        $conversation->users()->attach([$admin->id, $demo->id]);
+        // ---- Chat conversation (only if the two don't already share one) --
+        $conversation = Conversation::where('is_group', false)
+            ->whereHas('users', fn ($q) => $q->where('users.id', $admin->id))
+            ->whereHas('users', fn ($q) => $q->where('users.id', $demo->id))
+            ->first();
 
-        Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => $admin->id,
-            'body' => 'Hi! Welcome to ReviewCents. How is the Frontend roadmap going?',
-        ]);
-        Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => $demo->id,
-            'body' => 'Going well! Just passed the JavaScript quiz. 🎉',
-        ]);
-        Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => $admin->id,
-            'body' => 'Awesome. I assigned you a portfolio mission — check your dashboard.',
-        ]);
+        if (! $conversation) {
+            $conversation = Conversation::create(['is_group' => false]);
+            $conversation->users()->attach([$admin->id, $demo->id]);
+
+            Message::create(['conversation_id' => $conversation->id, 'user_id' => $admin->id, 'body' => 'Hi! Welcome to ReviewCents. How is the Frontend roadmap going?']);
+            Message::create(['conversation_id' => $conversation->id, 'user_id' => $demo->id, 'body' => 'Going well! Just passed the JavaScript quiz.']);
+            Message::create(['conversation_id' => $conversation->id, 'user_id' => $admin->id, 'body' => 'Awesome. I assigned you a portfolio mission — check your dashboard.']);
+        }
     }
 
     /**
-     * Helper to create a roadmap with ordered steps and an end-of-learning quiz.
-     * The quiz always has >= 3 questions (enforced by an assertion).
+     * Create (or refresh) a roadmap with ordered steps, flashcards and an
+     * end-of-learning quiz. Idempotent: parents are matched on natural keys
+     * and children (cards, quiz questions) are rebuilt.
      */
     private function createRoadmap(
         string $title,
@@ -357,26 +366,30 @@ class DatabaseSeeder extends Seeder
             throw new \RuntimeException("Quiz for [$title] must have at least 3 questions.");
         }
 
-        $roadmap = Roadmap::create([
-            'category_id' => $category->id,
-            'title' => $title,
-            'slug' => Str::slug($title),
-            'description' => $description,
-            'level' => $level,
-        ]);
+        $roadmap = Roadmap::updateOrCreate(
+            ['slug' => Str::slug($title)],
+            [
+                'category_id' => $category->id,
+                'title' => $title,
+                'description' => $description,
+                'level' => $level,
+            ],
+        );
 
         $categoryResources = $resources->where('category_id', $category->id)->values();
 
         $createdSteps = collect($steps)->map(function ($s, $i) use ($roadmap, $categoryResources) {
-            $step = RoadmapStep::create([
-                'roadmap_id' => $roadmap->id,
-                'resource_id' => $categoryResources->get($i)?->id,
-                'title' => $s[0],
-                'description' => $s[1],
-                'position' => $i + 1,
-            ]);
+            $step = RoadmapStep::updateOrCreate(
+                ['roadmap_id' => $roadmap->id, 'position' => $i + 1],
+                [
+                    'resource_id' => $categoryResources->get($i)?->id,
+                    'title' => $s[0],
+                    'description' => $s[1],
+                ],
+            );
 
-            // Flashcards for this step (front, back, optional hint).
+            // Rebuild flashcards for this step so content stays in sync.
+            $step->cards()->delete();
             foreach (($s[2] ?? []) as $ci => $card) {
                 LessonCard::create([
                     'roadmap_step_id' => $step->id,
@@ -390,13 +403,17 @@ class DatabaseSeeder extends Seeder
             return $step;
         });
 
-        $quiz = Quiz::create([
-            'roadmap_id' => $roadmap->id,
-            'title' => $title.' — Final Test',
-            'description' => 'Test what you learned in this roadmap.',
-            'passing_score' => 60,
-        ]);
+        $quiz = Quiz::updateOrCreate(
+            ['roadmap_id' => $roadmap->id],
+            [
+                'title' => $title.' — Final Test',
+                'description' => 'Test what you learned in this roadmap.',
+                'passing_score' => 60,
+            ],
+        );
 
+        // Rebuild questions + options (cascade deletes options).
+        $quiz->questions()->delete();
         foreach ($questions as $qi => $q) {
             $question = QuizQuestion::create([
                 'quiz_id' => $quiz->id,
@@ -412,36 +429,35 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Give the demo learner some progress + a passing attempt.
+        // Give the demo learner some progress + a passing attempt (idempotent).
         $demo = $learners->firstWhere('username', 'demo');
         if ($demo) {
             foreach ($createdSteps->take(2) as $step) {
-                Progress::create([
-                    'user_id' => $demo->id,
-                    'roadmap_step_id' => $step->id,
-                    'status' => 'completed',
-                    'completed_at' => now(),
-                ]);
+                Progress::firstOrCreate(
+                    ['user_id' => $demo->id, 'roadmap_step_id' => $step->id],
+                    ['status' => 'completed', 'completed_at' => now()],
+                );
             }
 
             // An in-progress lesson on the 3rd step so "Continue where you left off" shows.
             if ($third = $createdSteps->get(2)) {
-                \App\Models\LessonProgress::create([
-                    'user_id' => $demo->id,
-                    'roadmap_step_id' => $third->id,
-                    'last_card' => 1,
-                ]);
+                LessonProgress::firstOrCreate(
+                    ['user_id' => $demo->id, 'roadmap_step_id' => $third->id],
+                    ['last_card' => 1],
+                );
             }
 
-            QuizAttempt::create([
-                'user_id' => $demo->id,
-                'quiz_id' => $quiz->id,
-                'score' => 75,
-                'correct_count' => (int) round(count($questions) * 0.75),
-                'total_count' => count($questions),
-                'passed' => true,
-                'completed_at' => now(),
-            ]);
+            if (! QuizAttempt::where('user_id', $demo->id)->where('quiz_id', $quiz->id)->exists()) {
+                QuizAttempt::create([
+                    'user_id' => $demo->id,
+                    'quiz_id' => $quiz->id,
+                    'score' => 75,
+                    'correct_count' => (int) round(count($questions) * 0.75),
+                    'total_count' => count($questions),
+                    'passed' => true,
+                    'completed_at' => now(),
+                ]);
+            }
         }
 
         return $roadmap;
