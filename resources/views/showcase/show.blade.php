@@ -4,13 +4,13 @@
 
         <div class="mt-4 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 aspect-video flex items-center justify-center">
             @if ($project->imageUrl())
-                <img src="{{ $project->imageUrl() }}" alt="" class="h-full w-full object-cover">
+                <x-img :src="$project->imageUrl()" class="h-full w-full object-cover" />
             @else
-                <x-placeholder-icon size="h-16 w-16" />
+                <x-placeholder-icon size="size-16" />
             @endif
         </div>
 
-        <h1 class="mt-5 text-2xl sm:text-3xl font-bold">{{ $project->title }}</h1>
+        <h1 class="mt-5 text-2xl sm:text-3xl font-bold tracking-tightish">{{ $project->title }}</h1>
         <a href="{{ route('profile.show', $project->user) }}" class="mt-2 inline-flex items-center gap-2">
             <img src="{{ $project->user->avatarUrl() }}" class="h-6 w-6 rounded-full object-cover" alt="">
             <span class="text-sm text-gray-500 hover:text-gray-900 dark:text-white">by {{ $project->user->name }}</span>

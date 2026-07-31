@@ -7,7 +7,7 @@
             <x-badge :color="['beginner'=>'green','intermediate'=>'amber','advanced'=>'red'][$roadmap->level]">{{ ucfirst($roadmap->level) }}</x-badge>
         </div>
         <h1 class="mt-3 text-2xl sm:text-3xl font-bold">{{ $roadmap->title }}</h1>
-        <p class="mt-3 text-gray-700 dark:text-gray-300">{{ $roadmap->description }}</p>
+        <div class="mt-3 prose prose-zinc dark:prose-invert max-w-none">{{ $roadmap->description }}</div>
 
         @auth
             <div class="mt-5">

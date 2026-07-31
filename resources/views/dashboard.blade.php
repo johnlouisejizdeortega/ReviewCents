@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="text-2xl font-bold">Welcome back, {{ auth()->user()->name }} 👋</h1>
+        <p class="text-xs font-mono uppercase tracking-widest text-gray-400">Dashboard</p>
+        <h1 class="mt-1 text-2xl font-bold tracking-tightish">Welcome back, {{ auth()->user()->name }}</h1>
         <p class="text-sm text-gray-500 mt-1">Here's your learning progress and results.</p>
     </x-slot>
 
@@ -13,10 +14,12 @@
                 ['label' => 'Reviews written', 'value' => $stats['reviews']],
                 ['label' => 'Showcase projects', 'value' => $stats['projects']],
             ] as $tile)
-                <x-card class="p-5">
-                    <div class="text-3xl font-bold">{{ $tile['value'] }}</div>
-                    <div class="mt-1 text-xs text-gray-500 uppercase tracking-wide">{{ $tile['label'] }}</div>
-                </x-card>
+                <x-reveal :delay="$loop->index * 60" class="h-full">
+                    <x-card class="p-5 h-full">
+                        <div class="text-3xl font-bold tracking-tightish">{{ $tile['value'] }}</div>
+                        <div class="mt-1 text-xs font-mono text-gray-500 uppercase tracking-wide">{{ $tile['label'] }}</div>
+                    </x-card>
+                </x-reveal>
             @endforeach
         </div>
 

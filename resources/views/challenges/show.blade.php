@@ -9,7 +9,7 @@
         </div>
         <h1 class="mt-3 text-2xl sm:text-3xl font-bold">{{ $challenge->title }}</h1>
         <p class="mt-1 text-sm text-gray-400">{{ $challenge->points }} points</p>
-        <p class="mt-4 text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $challenge->description }}</p>
+        <div class="mt-4 prose prose-zinc dark:prose-invert max-w-none whitespace-pre-line">{{ $challenge->description }}</div>
 
         {{-- Existing submission --}}
         @auth

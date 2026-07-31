@@ -7,10 +7,26 @@
 
         <title>{{ $title ?? config('app.name', 'ReviewCents') }}</title>
 
+        {{-- Apply theme before paint to avoid a flash --}}
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem('theme');
+                    var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.classList.toggle('dark', dark);
+                } catch (e) {}
+            })();
+        </script>
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('head')
     </head>
     <body class="h-full font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+        {{-- Top navigation progress bar --}}
+        <div x-data="navProgress" x-show="active" x-cloak class="fixed top-0 inset-x-0 z-[60] h-0.5">
+            <div class="h-full bg-gray-900 dark:bg-white transition-all duration-300 ease-out" :style="`width: ${width}%`"></div>
+        </div>
+
         <div class="min-h-full flex flex-col w-full max-w-full">
             @include('layouts.navigation')
 

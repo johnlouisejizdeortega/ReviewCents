@@ -68,6 +68,52 @@ Alpine.data('terminal', (snippets = []) => ({
     },
 }));
 
+Alpine.data('themeToggle', () => ({
+    dark: document.documentElement.classList.contains('dark'),
+    toggle() {
+        this.dark = !this.dark;
+        document.documentElement.classList.toggle('dark', this.dark);
+        try {
+            localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+        } catch (e) {}
+    },
+}));
+
+// Slim top progress bar shown during full-page navigation.
+Alpine.data('navProgress', () => ({
+    active: false,
+    width: 0,
+    timer: null,
+    init() {
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            const href = a.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+            if (a.target === '_blank' || a.hasAttribute('download')) return;
+            if (a.origin && a.origin !== location.origin) return;
+            this.start();
+        });
+        document.addEventListener('submit', (e) => {
+            if (!e.defaultPrevented) this.start();
+        });
+        window.addEventListener('pagehide', () => this.finish());
+    },
+    start() {
+        this.active = true;
+        this.width = 8;
+        clearInterval(this.timer);
+        this.timer = setInterval(() => {
+            this.width = Math.min(this.width + Math.random() * 12, 90);
+        }, 200);
+    },
+    finish() {
+        clearInterval(this.timer);
+        this.width = 100;
+        setTimeout(() => { this.active = false; this.width = 0; }, 300);
+    },
+}));
+
 window.Alpine = Alpine;
 
 Alpine.start();

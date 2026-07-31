@@ -41,7 +41,10 @@
             <form @submit.prevent="send" class="border-t border-gray-200 dark:border-gray-800 p-3 flex gap-2">
                 <input x-model="draft" type="text" placeholder="Type a message…" required
                        class="flex-1 rounded-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
-                <button type="submit" class="px-4 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Send</button>
+                <button type="submit" :disabled="sending" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200 disabled:opacity-60">
+                    <x-lucide-loader-circle x-show="sending" x-cloak class="size-4 animate-spin" />
+                    <span x-text="sending ? 'Sending' : 'Send'"></span>
+                </button>
             </form>
         </x-card>
         <p class="mt-2 text-xs text-gray-400 text-center">Messages update live when Reverb is running (<code>php artisan reverb:start</code>).</p>
@@ -52,6 +55,7 @@
         function chatRoom(config) {
             return {
                 draft: '',
+                sending: false,
                 liveMessages: [],
                 meId: config.meId,
                 init() {
@@ -66,19 +70,25 @@
                     }
                 },
                 async send() {
-                    if (!this.draft.trim()) return;
+                    if (!this.draft.trim() || this.sending) return;
                     const body = this.draft;
                     this.draft = '';
-                    const res = await fetch(config.postUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': config.csrf,
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({ body }),
-                    });
-                    if (res.ok) {
+                    this.sending = true;
+                    let res;
+                    try {
+                        res = await fetch(config.postUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': config.csrf,
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify({ body }),
+                        });
+                    } finally {
+                        this.sending = false;
+                    }
+                    if (res && res.ok) {
                         const msg = await res.json();
                         this.liveMessages.push(msg);
                         this.$nextTick(() => this.scrollToBottom());

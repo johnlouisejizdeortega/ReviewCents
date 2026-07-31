@@ -36,6 +36,7 @@
 
             {{-- Right side --}}
             <div class="flex items-center gap-2">
+                <x-theme-toggle class="hidden sm:inline-flex" />
                 @auth
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-300 dark:border-gray-700 hover:border-gray-900 dark:hover:border-white transition-colors">
@@ -82,6 +83,10 @@
     {{-- Mobile menu --}}
     <div x-show="open" x-transition x-cloak class="md:hidden border-t border-gray-200 dark:border-gray-800">
         <div class="px-2 py-3 space-y-1">
+            <div class="flex items-center justify-between px-3 py-2">
+                <span class="text-base font-medium text-gray-600 dark:text-gray-300">Theme</span>
+                <x-theme-toggle class="-mr-2" />
+            </div>
             @foreach ($navLinks as $link)
                 <a href="{{ route($link['route']) }}" class="block px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs($link['pattern']) ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">{{ $link['label'] }}</a>
             @endforeach

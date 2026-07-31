@@ -7,6 +7,16 @@
 
         <title>{{ config('app.name', 'ReviewCents') }}</title>
 
+        <script>
+            (function () {
+                try {
+                    var t = localStorage.getItem('theme');
+                    var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.classList.toggle('dark', dark);
+                } catch (e) {}
+            })();
+        </script>
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="h-full font-sans text-gray-900 dark:text-gray-100 antialiased bg-gray-50 dark:bg-gray-950">

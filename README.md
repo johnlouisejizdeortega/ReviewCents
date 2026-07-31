@@ -24,31 +24,40 @@ Built with **Laravel 13 · PHP 8.4 · Tailwind CSS · Alpine.js · Laravel Rever
 
 ## Getting started
 
+**One command** — installs deps, sets up `.env`, creates & seeds the SQLite database, links storage, and builds assets:
+
 ```bash
-# 1. Install dependencies
-composer install
-npm install
-
-# 2. Environment
-cp .env.example .env
-php artisan key:generate
-
-# 3. Database (SQLite by default)
-touch database/database.sqlite
-php artisan migrate --seed
-
-# 4. Build assets
-npm run build      # or: npm run dev  (for hot reload)
-
-# 5. Run the app
-php artisan serve
+cp .env.example .env    # only needed the first time
+composer setup
 ```
 
-Open http://localhost:8000.
+Then start everything (web server + queue + Reverb + Vite) with a single command:
+
+```bash
+composer dev
+```
+
+Open **http://localhost:8000**.
+
+<details>
+<summary>Prefer manual steps?</summary>
+
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed
+php artisan storage:link
+npm run build            # or: npm run dev
+php artisan serve
+```
+</details>
 
 ### Real-time chat
 
-Live chat needs the Reverb WebSocket server and a queue worker running alongside `serve`:
+`composer dev` already runs Reverb + the queue worker. If you run pieces manually, live chat needs both alongside `serve`:
 
 ```bash
 php artisan reverb:start     # WebSocket server (port 8080)
@@ -56,6 +65,10 @@ php artisan queue:work       # processes queued broadcast events
 ```
 
 Messages always send and appear for the sender immediately; the other participant sees them live once Reverb + the queue worker are running.
+
+### Theme
+
+Use the sun/moon toggle in the nav to switch light/dark — your choice is remembered, and it defaults to your OS preference.
 
 ## Demo accounts
 

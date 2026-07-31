@@ -120,7 +120,7 @@
                             <x-card :href="route('showcase.show', $project)" class="overflow-hidden h-full">
                                 <div class="aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                                     @if ($project->imageUrl())
-                                        <img src="{{ $project->imageUrl() }}" alt="" class="h-full w-full object-cover">
+                                        <x-img :src="$project->imageUrl()" class="h-full w-full object-cover" />
                                     @else
                                         <x-placeholder-icon size="size-10" />
                                     @endif

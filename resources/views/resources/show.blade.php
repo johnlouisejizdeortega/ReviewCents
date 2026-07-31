@@ -10,7 +10,7 @@
         <div class="mt-2 flex items-center gap-3">
             <x-stars :rating="$resource->avg_rating" :count="$resource->reviews_count" />
         </div>
-        <p class="mt-4 text-gray-700 dark:text-gray-300">{{ $resource->description }}</p>
+        <div class="mt-4 prose prose-zinc dark:prose-invert max-w-none">{{ $resource->description }}</div>
         @if ($resource->url)
             <a href="{{ $resource->url }}" target="_blank" rel="noopener"
                class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">
