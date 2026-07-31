@@ -85,17 +85,39 @@ After seeding:
 php artisan test
 ```
 
-## Switching to MySQL (production)
+## Deploying to Laravel Cloud (Postgres)
 
-Update `.env`:
+The app is database-agnostic (SQLite for local, Postgres in production). Laravel Cloud
+injects the database credentials automatically once you attach the Postgres database —
+you do **not** set `DB_*` by hand.
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=reviewcents
-DB_USERNAME=root
-DB_PASSWORD=
+**Deploy command** (Cloud → app → Deploy commands):
+
+```bash
+php artisan migrate --force
 ```
 
-Then run `php artisan migrate --seed`.
+> First deploy only, if you want the demo content: also run `php artisan db:seed --force`.
+> Never run `migrate:fresh`/`migrate --seed` against production — it wipes data.
+
+**Environment variables** to set in the Cloud dashboard:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-domain
+
+# Uploads must go to object storage (local disk is ephemeral on Cloud)
+FILESYSTEM_DISK=s3        # + the S3/object-storage keys from Cloud
+
+# Background work (queued broadcasts, mail) — run a Worker process in Cloud
+QUEUE_CONNECTION=database
+```
+
+**Real-time chat (optional):** enable a Reverb process in Cloud, then set `REVERB_*`
+and `BROADCAST_CONNECTION=reverb`. The `VITE_REVERB_*` vars must be present **at build
+time** (they're compiled into JS). If you don't run Reverb, set `BROADCAST_CONNECTION=log`
+— messages still send and persist; only live push is disabled.
+
+**Other databases:** the same code runs on MySQL — set `DB_CONNECTION=mysql` and the
+connection vars, then `php artisan migrate`.

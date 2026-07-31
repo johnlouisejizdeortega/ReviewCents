@@ -28,7 +28,7 @@ class ProjectController extends Controller
         $data['user_id'] = $request->user()->id;
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('projects', 'public');
+            $data['image_path'] = $request->file('image')->store('projects');
         }
 
         Project::create($data);
@@ -51,9 +51,9 @@ class ProjectController extends Controller
 
         if ($request->hasFile('image')) {
             if ($project->image_path) {
-                Storage::disk('public')->delete($project->image_path);
+                Storage::delete($project->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('projects', 'public');
+            $data['image_path'] = $request->file('image')->store('projects');
         }
 
         $project->update($data);
@@ -66,7 +66,7 @@ class ProjectController extends Controller
         $this->authorizeOwner($request, $project);
 
         if ($project->image_path) {
-            Storage::disk('public')->delete($project->image_path);
+            Storage::delete($project->image_path);
         }
         $project->delete();
 

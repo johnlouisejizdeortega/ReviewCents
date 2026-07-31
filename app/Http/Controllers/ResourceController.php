@@ -22,7 +22,8 @@ class ResourceController extends Controller
         }
 
         if ($request->filled('q')) {
-            $query->where('title', 'like', '%'.$request->q.'%');
+            // Case-insensitive & portable (Postgres LIKE is case-sensitive; SQLite is not).
+            $query->whereRaw('LOWER(title) LIKE ?', ['%'.strtolower($request->q).'%']);
         }
 
         $sort = $request->get('sort', 'top');

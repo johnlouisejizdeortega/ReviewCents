@@ -14,7 +14,8 @@ class SubmissionController extends Controller
     {
         return view('admin.submissions.index', [
             'submissions' => ChallengeSubmission::with(['user', 'challenge'])
-                ->orderByRaw("status = 'pending' desc")
+                // Pending first, then newest — portable across SQLite/Postgres/MySQL.
+                ->orderByRaw("case when status = 'pending' then 0 else 1 end")
                 ->latest()
                 ->get(),
         ]);
