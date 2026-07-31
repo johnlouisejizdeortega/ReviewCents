@@ -6,6 +6,7 @@ use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ProjectController;
@@ -58,6 +59,10 @@ Route::middleware('auth')->group(function () {
 
     // Roadmap progress
     Route::post('/steps/{step}/toggle', [ProgressController::class, 'toggle'])->name('progress.toggle');
+
+    // Flashcard lessons (per roadmap step) + resume position
+    Route::get('/roadmaps/{roadmap}/steps/{step}/learn', [LessonController::class, 'show'])->name('lessons.show');
+    Route::post('/steps/{step}/lesson-progress', [LessonController::class, 'save'])->name('lessons.save');
 
     // End-of-learning quiz
     Route::get('/roadmaps/{roadmap}/quiz', [QuizController::class, 'show'])->name('quiz.show');

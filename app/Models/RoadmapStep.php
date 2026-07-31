@@ -25,6 +25,25 @@ class RoadmapStep extends Model
         return $this->hasMany(Progress::class);
     }
 
+    public function cards(): HasMany
+    {
+        return $this->hasMany(LessonCard::class)->orderBy('position');
+    }
+
+    public function lessonProgress(): HasMany
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function lessonProgressFor(?User $user): ?LessonProgress
+    {
+        if (! $user) {
+            return null;
+        }
+
+        return $this->lessonProgress()->where('user_id', $user->id)->first();
+    }
+
     public function isCompletedBy(?User $user): bool
     {
         if (! $user) {

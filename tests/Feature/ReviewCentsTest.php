@@ -169,6 +169,32 @@ class ReviewCentsTest extends TestCase
         Event::assertDispatched(MessageSent::class);
     }
 
+    public function test_lesson_progress_saves_and_completes(): void
+    {
+        $user = User::factory()->create();
+        $roadmap = Roadmap::create([
+            'category_id' => $this->category()->id,
+            'title' => 'FE', 'slug' => 'fe', 'description' => 'd',
+        ]);
+        $step = RoadmapStep::create(['roadmap_id' => $roadmap->id, 'title' => 'Learn HTML', 'position' => 1]);
+
+        // Save the reading position.
+        $this->actingAs($user)
+            ->postJson(route('lessons.save', $step), ['last_card' => 2])
+            ->assertOk();
+        $this->assertDatabaseHas('lesson_progress', [
+            'user_id' => $user->id, 'roadmap_step_id' => $step->id, 'last_card' => 2,
+        ]);
+
+        // Finishing the lesson also completes the roadmap step.
+        $this->actingAs($user)
+            ->postJson(route('lessons.save', $step), ['last_card' => 4, 'completed' => true])
+            ->assertOk();
+        $this->assertDatabaseHas('progress', [
+            'user_id' => $user->id, 'roadmap_step_id' => $step->id, 'status' => 'completed',
+        ]);
+    }
+
     public function test_challenge_submission_flow(): void
     {
         $user = User::factory()->create();

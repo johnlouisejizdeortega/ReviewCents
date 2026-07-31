@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
+use App\Models\LessonProgress;
 use App\Models\Progress;
 use App\Models\QuizAttempt;
 use App\Models\Roadmap;
@@ -38,11 +39,19 @@ class DashboardController extends Controller
 
         $submissions = $user->challengeSubmissions()->with('challenge')->latest()->get();
 
+        // Resume: the most recently studied lesson that isn't finished yet.
+        $continue = LessonProgress::with('step.roadmap')
+            ->where('user_id', $user->id)
+            ->whereNull('completed_at')
+            ->latest('updated_at')
+            ->first();
+
         return view('dashboard', [
             'roadmaps' => $roadmaps,
             'attempts' => $attempts,
             'assignments' => $assignments,
             'submissions' => $submissions,
+            'continue' => $continue,
             'stats' => [
                 'stepsCompleted' => Progress::where('user_id', $user->id)->where('status', 'completed')->count(),
                 'quizzesPassed' => $attempts->where('passed', true)->unique('quiz_id')->count(),

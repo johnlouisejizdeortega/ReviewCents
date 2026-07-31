@@ -6,6 +6,24 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+        {{-- Continue where you left off --}}
+        @if ($continue && $continue->step && $continue->step->roadmap)
+            <x-card class="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white">
+                <div class="flex items-center gap-4">
+                    <x-lucide-layers class="size-8 shrink-0" />
+                    <div>
+                        <p class="text-xs font-mono uppercase tracking-widest opacity-60">Continue where you left off</p>
+                        <h2 class="mt-0.5 font-bold tracking-tightish">{{ $continue->step->title }}</h2>
+                        <p class="text-sm opacity-70">{{ $continue->step->roadmap->title }} · resuming at card {{ $continue->last_card + 1 }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('lessons.show', [$continue->step->roadmap, $continue->step]) }}"
+                   class="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold bg-white text-gray-900 dark:bg-gray-900 dark:text-white hover:opacity-90 transition">
+                    Resume <x-lucide-arrow-right class="size-4" />
+                </a>
+            </x-card>
+        @endif
+
         {{-- Stat tiles --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach ([

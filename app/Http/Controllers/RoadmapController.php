@@ -26,8 +26,18 @@ class RoadmapController extends Controller
 
     public function show(Roadmap $roadmap): View
     {
-        $roadmap->load(['category', 'steps.resource', 'quiz.questions']);
         $user = auth()->user();
+
+        $roadmap->load([
+            'category',
+            'quiz.questions',
+            'steps' => function ($q) use ($user) {
+                $q->withCount('cards')->with('resource');
+                if ($user) {
+                    $q->with(['lessonProgress' => fn ($p) => $p->where('user_id', $user->id)]);
+                }
+            },
+        ]);
 
         return view('roadmaps.show', [
             'roadmap' => $roadmap,

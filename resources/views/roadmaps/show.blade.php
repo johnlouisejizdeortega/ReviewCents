@@ -42,8 +42,27 @@
                             @if ($step->description)
                                 <p class="mt-1 text-sm text-gray-500">{{ $step->description }}</p>
                             @endif
+
+                            @if (($step->cards_count ?? 0) > 0)
+                                @php $lp = auth()->check() ? $step->lessonProgress->first() : null; @endphp
+                                <div class="mt-3 flex flex-wrap items-center gap-3">
+                                    @auth
+                                        <x-button :href="route('lessons.show', [$roadmap, $step])" size="sm" :variant="$done ? 'outline' : 'solid'">
+                                            <x-lucide-layers class="size-4" />
+                                            {{ $done ? 'Review lesson' : ($lp ? 'Continue lesson' : 'Start lesson') }}
+                                        </x-button>
+                                    @else
+                                        <x-button :href="route('login')" size="sm"><x-lucide-layers class="size-4" /> Start lesson</x-button>
+                                    @endauth
+                                    <span class="text-xs font-mono text-gray-400">{{ $step->cards_count }} cards</span>
+                                    @if ($lp && !$done)
+                                        <span class="text-xs font-mono text-gray-400">· resume card {{ $lp->last_card + 1 }}</span>
+                                    @endif
+                                </div>
+                            @endif
+
                             @if ($step->resource)
-                                <a href="{{ route('resources.show', $step->resource) }}" class="mt-2 inline-flex text-xs font-medium text-gray-900 dark:text-white hover:underline">{{ $step->resource->title }}</a>
+                                <a href="{{ route('resources.show', $step->resource) }}" class="mt-2 inline-flex text-xs text-gray-500 hover:text-gray-900 dark:hover:text-white link-underline">Reference: {{ $step->resource->title }}</a>
                             @endif
                         </div>
                     </div>

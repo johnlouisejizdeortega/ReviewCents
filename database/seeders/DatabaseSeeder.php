@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\ChallengeSubmission;
 use App\Models\Conversation;
+use App\Models\LessonCard;
 use App\Models\Message;
 use App\Models\Progress;
 use App\Models\Project;
@@ -101,14 +102,14 @@ class DatabaseSeeder extends Seeder
 
         // ---- Resources ---------------------------------------------------
         $resourceData = [
-            ['The Modern JavaScript Bootcamp', $webDev, 'course', 'A complete guide to modern JS from fundamentals to advanced patterns.'],
-            ['HTML & CSS Crash Course', $webDev, 'tutorial', 'Build responsive pages with semantic HTML and modern CSS.'],
-            ['Laravel From Scratch', $webDev, 'course', 'Learn the Laravel framework by building real applications.'],
-            ['Figma for Developers', $webDesign, 'tutorial', 'Turn designs into code using Figma effectively.'],
-            ['Refactoring UI', $webDesign, 'book', 'Practical design tips for developers who build interfaces.'],
-            ['Tailwind CSS Mastery', $webDesign, 'course', 'Design beautiful, responsive UIs with utility-first CSS.'],
-            ['VS Code Power User', $tools, 'tutorial', 'Supercharge your editor workflow.'],
-            ['Git & GitHub Essentials', $tools, 'course', 'Version control fundamentals every developer needs.'],
+            ['The Modern JavaScript Guide', $webDev, 'course', 'A complete guide to modern JS from fundamentals to advanced patterns.', 'https://javascript.info'],
+            ['HTML & CSS Crash Course', $webDev, 'tutorial', 'Build responsive pages with semantic HTML and modern CSS.', 'https://web.dev/learn/html'],
+            ['Laravel From Scratch', $webDev, 'course', 'Learn the Laravel framework by building real applications.', 'https://laravel.com/docs'],
+            ['Figma for Developers', $webDesign, 'tutorial', 'Turn designs into code using Figma effectively.', 'https://help.figma.com'],
+            ['Refactoring UI', $webDesign, 'book', 'Practical design tips for developers who build interfaces.', 'https://www.refactoringui.com'],
+            ['Tailwind CSS Docs', $webDesign, 'course', 'Design beautiful, responsive UIs with utility-first CSS.', 'https://tailwindcss.com/docs'],
+            ['VS Code Docs', $tools, 'tutorial', 'Supercharge your editor workflow.', 'https://code.visualstudio.com/docs'],
+            ['Git & GitHub Essentials', $tools, 'course', 'Version control fundamentals every developer needs.', 'https://docs.github.com/get-started'],
         ];
 
         $resources = collect($resourceData)->map(function ($r) use ($admin) {
@@ -118,7 +119,7 @@ class DatabaseSeeder extends Seeder
                 'title' => $r[0],
                 'slug' => Str::slug($r[0]),
                 'description' => $r[3],
-                'url' => 'https://example.com/'.Str::slug($r[0]),
+                'url' => $r[4],
                 'type' => $r[2],
             ]);
         });
@@ -144,10 +145,34 @@ class DatabaseSeeder extends Seeder
             'beginner',
             'Go from zero to a job-ready frontend developer.',
             [
-                ['Learn HTML', 'Structure content with semantic HTML.'],
-                ['Learn CSS & Responsive Design', 'Style and make layouts responsive.'],
-                ['Learn JavaScript', 'Add interactivity and logic.'],
-                ['Learn a Framework', 'Pick React, Vue, or similar.'],
+                ['Learn HTML', 'Structure content with semantic HTML.', [
+                    ['What is HTML?', 'HTML (HyperText Markup Language) is the skeleton of every web page. It uses tags like <p>, <h1>, and <a> to give content structure and meaning — not styling.', 'Structure, not style'],
+                    ['Semantic elements', 'Semantic tags describe their meaning: <header>, <nav>, <main>, <article>, <footer>. They make pages more accessible to screen readers and easier for search engines to understand.', null],
+                    ['Headings <h1>–<h6>', 'Use one <h1> per page for the main title, then <h2>–<h6> for a logical outline. Never pick a heading level just for its size — style with CSS instead.', null],
+                    ['Links & images', 'An anchor <a href="/about">About</a> creates a link; <img src="cat.jpg" alt="A cat"> embeds an image. Always add descriptive alt text for accessibility.', 'alt text matters'],
+                    ['Forms', 'Collect input with <form>, <input>, <label>, and <button>. Pair every input with a <label> so it is usable and accessible.', null],
+                ]],
+                ['Learn CSS & Responsive Design', 'Style and make layouts responsive.', [
+                    ['What is CSS?', 'CSS (Cascading Style Sheets) controls how HTML looks — colours, spacing, fonts, layout. You select elements and apply rules: selector { property: value; }', null],
+                    ['The box model', 'Every element is a box with four layers: content → padding → border → margin. Understanding these is the key to controlling spacing.', 'content, padding, border, margin'],
+                    ['Flexbox', 'display: flex turns a container into a flexible row (or column with flex-direction: column). Use justify-content and align-items to position children.', null],
+                    ['Media queries', 'Responsive design adapts to screen size. @media (max-width: 640px) { … } applies styles only on small screens. Design mobile-first, then add breakpoints.', 'mobile-first'],
+                    ['Units: rem vs px', 'px is fixed; rem scales with the root font size, making layouts more accessible and consistent. Prefer rem/em for typography and spacing.', null],
+                ]],
+                ['Learn JavaScript', 'Add interactivity and logic.', [
+                    ['What is JavaScript?', 'JavaScript makes pages interactive — responding to clicks, updating content, fetching data. It runs in the browser and, via Node.js, on servers too.', null],
+                    ['Variables: let & const', 'Use const for values that never change and let for values that do. Avoid var. Example: const name = "Ada"; let count = 0;', 'const by default'],
+                    ['Functions', 'Functions package reusable logic. Arrow syntax: const add = (a, b) => a + b; Call it with add(2, 3) and it returns 5.', null],
+                    ['=== vs ==', 'Triple equals compares value AND type with no surprises; double equals converts types first and causes bugs. Always use ===.', 'always ==='],
+                    ['The DOM', 'The DOM is the browser live tree of your HTML. document.querySelector(".btn").addEventListener("click", …) lets JS react to user actions.', null],
+                ]],
+                ['Learn a Framework', 'Pick React, Vue, or similar.', [
+                    ['Why a framework?', 'Frameworks like React, Vue, and Svelte help you build complex UIs from reusable components and keep the screen in sync with your data automatically.', null],
+                    ['Components', 'A component is a self-contained piece of UI (a button, a card) with its own markup and logic. You compose small components into whole pages.', null],
+                    ['State', 'State is data that can change over time (a counter, a form input). When state updates, the framework re-renders the affected UI for you.', 'data that changes'],
+                    ['Props', 'Props pass data from a parent component down to a child, making components configurable and reusable.', null],
+                    ['Pick one & go deep', 'Do not chase every framework. Learn one well — React is the most in-demand — and the concepts transfer to the others.', null],
+                ]],
             ],
             $resources,
             [
@@ -177,9 +202,27 @@ class DatabaseSeeder extends Seeder
             'beginner',
             'Learn the core principles of designing for the web.',
             [
-                ['Design Principles', 'Contrast, alignment, hierarchy, spacing.'],
-                ['Color & Typography', 'Choosing palettes and type scales.'],
-                ['Layout & Grids', 'Composing balanced responsive layouts.'],
+                ['Design Principles', 'Contrast, alignment, hierarchy, spacing.', [
+                    ['Visual hierarchy', 'Hierarchy guides the eye to what matters most first. Create it with size, weight, colour, and spacing — the most important thing should be the most prominent.', null],
+                    ['Contrast', 'Contrast makes elements distinct and text readable. Ensure enough contrast between text and background, and between primary and secondary actions.', 'accessibility'],
+                    ['Alignment', 'Align elements to a shared grid or edge. Strong alignment looks intentional and tidy; random positions look messy.', null],
+                    ['Whitespace', 'Empty space is not wasted — it groups related items, separates unrelated ones, and gives content room to breathe. When in doubt, add more.', 'less is more'],
+                    ['Consistency', 'Reuse the same spacing, colours, and components everywhere. Consistency builds trust and makes interfaces feel polished and learnable.', null],
+                ]],
+                ['Color & Typography', 'Choosing palettes and type scales.', [
+                    ['Building a palette', 'Start with one primary colour, a neutral scale (greys), and one accent. Limit your palette — too many colours feels chaotic.', null],
+                    ['Contrast & accessibility', 'Body text needs a contrast ratio of at least 4.5:1 against its background. Test it — low-contrast grey-on-white excludes many readers.', '4.5:1'],
+                    ['Type scale', 'Use a consistent set of font sizes (e.g. 12, 14, 16, 20, 24, 32) instead of arbitrary values. A scale creates rhythm and hierarchy.', null],
+                    ['Readable body text', 'Keep line length around 60–75 characters, line-height about 1.5, and body size at least 16px. Comfort beats cramming.', null],
+                    ['Pairing fonts', 'One typeface used well is plenty. If you pair, contrast roles: a characterful heading font with a neutral, legible body font.', null],
+                ]],
+                ['Layout & Grids', 'Composing balanced responsive layouts.', [
+                    ['Grids', 'A grid divides the page into columns for consistent alignment. Even a simple 12-column grid makes layouts feel balanced and organised.', null],
+                    ['Responsive layout', 'Design mobile-first: start with a single column, then let content reflow into multiple columns as the screen grows.', 'mobile-first'],
+                    ['Spacing system', 'Use a spacing scale (4, 8, 12, 16, 24, 32px). Consistent gaps look far more professional than eyeballed values.', null],
+                    ['Proximity', 'Group related items close together and separate unrelated groups with more space. Proximity communicates relationships before anyone reads a word.', null],
+                    ['Focal point', 'Give each screen one clear focal point — the primary action or message. Everything else should support, not compete.', null],
+                ]],
             ],
             $resources,
             [
@@ -325,13 +368,26 @@ class DatabaseSeeder extends Seeder
         $categoryResources = $resources->where('category_id', $category->id)->values();
 
         $createdSteps = collect($steps)->map(function ($s, $i) use ($roadmap, $categoryResources) {
-            return RoadmapStep::create([
+            $step = RoadmapStep::create([
                 'roadmap_id' => $roadmap->id,
                 'resource_id' => $categoryResources->get($i)?->id,
                 'title' => $s[0],
                 'description' => $s[1],
                 'position' => $i + 1,
             ]);
+
+            // Flashcards for this step (front, back, optional hint).
+            foreach (($s[2] ?? []) as $ci => $card) {
+                LessonCard::create([
+                    'roadmap_step_id' => $step->id,
+                    'front' => $card[0],
+                    'back' => $card[1],
+                    'hint' => $card[2] ?? null,
+                    'position' => $ci + 1,
+                ]);
+            }
+
+            return $step;
         });
 
         $quiz = Quiz::create([
@@ -365,6 +421,15 @@ class DatabaseSeeder extends Seeder
                     'roadmap_step_id' => $step->id,
                     'status' => 'completed',
                     'completed_at' => now(),
+                ]);
+            }
+
+            // An in-progress lesson on the 3rd step so "Continue where you left off" shows.
+            if ($third = $createdSteps->get(2)) {
+                \App\Models\LessonProgress::create([
+                    'user_id' => $demo->id,
+                    'roadmap_step_id' => $third->id,
+                    'last_card' => 1,
                 ]);
             }
 
