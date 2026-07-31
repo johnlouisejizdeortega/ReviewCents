@@ -1,4 +1,4 @@
-
+import './echo';
 
 import Alpine from 'alpinejs';
 

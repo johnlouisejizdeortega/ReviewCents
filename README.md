@@ -1,58 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ReviewCents
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A **mobile-first platform for developers and aspiring developers** to learn web development & web design, review learning resources, prove their skills with end-of-learning tests, tackle challenges & missions, get custom tasks from mentors, chat in real time, and show off their work.
 
-## About Laravel
+Built with **Laravel 13 · PHP 8.4 · Tailwind CSS · Alpine.js · Laravel Reverb** on **SQLite**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 📱 **Mobile-first UI** — sticky top nav, hamburger menu, bottom tab bar, dark mode.
+- 👤 **Accounts & roles** — learner / developer / admin, editable profile with avatar, bio & headline.
+- ⭐ **Resource reviews** — rate & review courses, tutorials, tools, books, bootcamps (avg rating auto-updates).
+- 🗺️ **Learning roadmaps** — step-by-step paths for web dev & design with per-user progress tracking.
+- 📝 **End-of-learning tests** — every roadmap ends with a quiz (**minimum 3 questions each**); scores & pass/fail are recorded and shown on your dashboard and profile.
+- ⚡ **Challenges & missions** — practice by building; submit your work for mentor feedback.
+- 🎯 **Admin-assigned custom tasks** — admins assign tasks/missions to specific users, then **rate them and leave feedback**.
+- 💬 **Real-time chat** — 1:1 messaging powered by **Laravel Reverb** (WebSockets) with live message delivery.
+- 🚀 **Showcase** — a portfolio of community projects, linked from public profiles.
+- 🛠️ **Admin panel** — manage categories, resources, roadmaps, quizzes, challenges, users, submissions & assignments.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP 8.2+ (developed on 8.4), Composer
+- Node.js 18+ & npm
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Getting started
 
 ```bash
-composer require laravel/boost --dev
+# 1. Install dependencies
+composer install
+npm install
 
-php artisan boost:install
+# 2. Environment
+cp .env.example .env
+php artisan key:generate
+
+# 3. Database (SQLite by default)
+touch database/database.sqlite
+php artisan migrate --seed
+
+# 4. Build assets
+npm run build      # or: npm run dev  (for hot reload)
+
+# 5. Run the app
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Open http://localhost:8000.
 
-## Contributing
+### Real-time chat
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Live chat needs the Reverb WebSocket server and a queue worker running alongside `serve`:
 
-## Code of Conduct
+```bash
+php artisan reverb:start     # WebSocket server (port 8080)
+php artisan queue:work       # processes queued broadcast events
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Messages always send and appear for the sender immediately; the other participant sees them live once Reverb + the queue worker are running.
 
-## Security Vulnerabilities
+## Demo accounts
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+After seeding:
 
-## License
+| Role    | Email                      | Password   |
+|---------|----------------------------|------------|
+| Admin   | `admin@reviewcents.test`   | `password` |
+| Learner | `demo@reviewcents.test`    | `password` |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Testing
+
+```bash
+php artisan test
+```
+
+## Switching to MySQL (production)
+
+Update `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=reviewcents
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Then run `php artisan migrate --seed`.
