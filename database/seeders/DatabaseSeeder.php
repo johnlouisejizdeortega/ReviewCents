@@ -28,29 +28,59 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ---- Users -------------------------------------------------------
-        $admin = User::create([
-            'name' => 'Admin Mentor',
-            'username' => 'admin',
-            'email' => 'admin@reviewcents.test',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'headline' => 'Lead mentor & platform admin',
-            'bio' => 'I review learning paths and mentor upcoming developers.',
-            'email_verified_at' => now(),
-        ]);
+        // NOTE: no factories/Faker here — this seeder must run in production
+        // (Laravel Cloud installs with --no-dev, so Faker is unavailable).
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@reviewcents.test'],
+            [
+                'name' => 'Admin Mentor',
+                'username' => 'admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'headline' => 'Lead mentor & platform admin',
+                'bio' => 'I review learning paths and mentor upcoming developers.',
+                'email_verified_at' => now(),
+            ],
+        );
 
-        $demo = User::create([
-            'name' => 'Demo Learner',
-            'username' => 'demo',
-            'email' => 'demo@reviewcents.test',
-            'password' => Hash::make('password'),
-            'role' => 'learner',
-            'headline' => 'Aspiring full-stack developer',
-            'bio' => 'Learning web development and design one roadmap at a time.',
-            'email_verified_at' => now(),
-        ]);
+        $demo = User::firstOrCreate(
+            ['email' => 'demo@reviewcents.test'],
+            [
+                'name' => 'Demo Learner',
+                'username' => 'demo',
+                'password' => Hash::make('password'),
+                'role' => 'learner',
+                'headline' => 'Aspiring full-stack developer',
+                'bio' => 'Learning web development and design one roadmap at a time.',
+                'email_verified_at' => now(),
+            ],
+        );
 
-        $users = User::factory(6)->create();
+        $sampleUsers = [
+            ['Alex Rivera', 'developer'],
+            ['Sam Chen', 'learner'],
+            ['Jordan Lee', 'developer'],
+            ['Taylor Kim', 'learner'],
+            ['Morgan Diaz', 'developer'],
+            ['Casey Park', 'learner'],
+        ];
+
+        $users = collect($sampleUsers)->map(function ($u) {
+            $username = Str::slug($u[0]);
+
+            return User::firstOrCreate(
+                ['email' => $username.'@reviewcents.test'],
+                [
+                    'name' => $u[0],
+                    'username' => $username,
+                    'password' => Hash::make('password'),
+                    'role' => $u[1],
+                    'headline' => $u[1] === 'developer' ? 'Developer & mentor' : 'Learning to code',
+                    'email_verified_at' => now(),
+                ],
+            );
+        });
+
         $allLearners = $users->push($demo);
 
         // ---- Categories --------------------------------------------------
