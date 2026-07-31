@@ -4,7 +4,7 @@
         @include('admin._nav')
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold">Assignments</h2>
-            <a href="{{ route('admin.assignments.create') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">+ Assign</a>
+            <a href="{{ route('admin.assignments.create') }}" class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">+ Assign</a>
         </div>
 
         <div class="space-y-3">
@@ -33,17 +33,17 @@
                             <x-stars :rating="$assignment->rating" /> <span class="text-gray-500">{{ $assignment->feedback }}</span>
                         </div>
                     @else
-                        <button @click="open = !open" class="mt-3 text-sm text-indigo-600 hover:underline">Rate &amp; give feedback</button>
+                        <button @click="open = !open" class="mt-3 text-sm text-gray-900 dark:text-white hover:underline">Rate &amp; give feedback</button>
                         <form x-show="open" x-cloak method="POST" action="{{ route('admin.assignments.review', $assignment) }}" class="mt-3 space-y-2">
                             @csrf @method('PATCH')
                             <div>
                                 <label class="block text-sm font-medium mb-1">Rating</label>
-                                <select name="rating" class="rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="rating" class="rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                                     @for ($i = 1; $i <= 5; $i++)<option value="{{ $i }}">{{ $i }} ★</option>@endfor
                                 </select>
                             </div>
-                            <textarea name="feedback" rows="2" placeholder="Feedback…" required class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                            <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Save feedback</button>
+                            <textarea name="feedback" rows="2" placeholder="Feedback…" required class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white"></textarea>
+                            <button class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Save feedback</button>
                         </form>
                     @endif
                 </x-card>

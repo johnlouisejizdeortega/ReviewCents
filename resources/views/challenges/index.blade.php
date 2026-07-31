@@ -6,9 +6,9 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="flex flex-wrap gap-2 mb-6">
-            <a href="{{ route('challenges.index') }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ empty($filters['type']) ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800' }}">All</a>
-            <a href="{{ route('challenges.index', ['type' => 'challenge']) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['type'] ?? '') === 'challenge' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800' }}">Challenges</a>
-            <a href="{{ route('challenges.index', ['type' => 'mission']) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['type'] ?? '') === 'mission' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800' }}">Missions</a>
+            <a href="{{ route('challenges.index') }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ empty($filters['type']) ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800' }}">All</a>
+            <a href="{{ route('challenges.index', ['type' => 'challenge']) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['type'] ?? '') === 'challenge' ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800' }}">Challenges</a>
+            <a href="{{ route('challenges.index', ['type' => 'mission']) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['type'] ?? '') === 'mission' ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800' }}">Missions</a>
         </div>
 
         @if ($challenges->count())

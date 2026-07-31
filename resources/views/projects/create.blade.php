@@ -6,7 +6,7 @@
                 @csrf
                 @include('projects.form')
                 <div class="mt-6 flex gap-2">
-                    <button class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Save project</button>
+                    <button class="px-5 py-2.5 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Save project</button>
                     <a href="{{ route('projects.index') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200">Cancel</a>
                 </div>
             </form>

@@ -4,7 +4,7 @@
         @include('admin._nav')
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold">Challenges &amp; missions</h2>
-            <a href="{{ route('admin.challenges.create') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">+ New</a>
+            <a href="{{ route('admin.challenges.create') }}" class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">+ New</a>
         </div>
         <x-card class="divide-y divide-gray-100 dark:divide-gray-800">
             @forelse ($challenges as $challenge)
@@ -14,10 +14,10 @@
                         <div class="text-xs text-gray-500">{{ ucfirst($challenge->type) }} · {{ ucfirst($challenge->difficulty) }} · {{ $challenge->submissions_count }} submissions</div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <a href="{{ route('admin.challenges.edit', $challenge) }}" class="text-sm text-indigo-600 hover:underline">Edit</a>
+                        <a href="{{ route('admin.challenges.edit', $challenge) }}" class="text-sm text-gray-900 dark:text-white hover:underline">Edit</a>
                         <form method="POST" action="{{ route('admin.challenges.destroy', $challenge) }}" onsubmit="return confirm('Delete challenge?')">
                             @csrf @method('DELETE')
-                            <button class="text-sm text-red-600 hover:underline">Delete</button>
+                            <button class="text-sm text-gray-700 dark:text-gray-300 hover:underline">Delete</button>
                         </form>
                     </div>
                 </div>

@@ -10,7 +10,7 @@
                     @php $last = $conversation->messages->sortByDesc('created_at')->first(); @endphp
                     <x-card :href="route('chat.show', $conversation)" class="p-4">
                         <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center font-semibold text-indigo-700 dark:text-indigo-300">
+                            <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 dark:bg-gray-800 flex items-center justify-center font-semibold text-gray-900 dark:text-gray-100 dark:text-gray-300">
                                 {{ strtoupper(substr($conversation->titleFor(auth()->user()), 0, 1)) }}
                             </div>
                             <div class="flex-1 min-w-0">
@@ -40,7 +40,7 @@
                         </div>
                         <form method="POST" action="{{ route('chat.start', $person) }}">
                             @csrf
-                            <button class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700">Chat</button>
+                            <button class="px-3 py-1.5 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-xs font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Chat</button>
                         </form>
                     </x-card>
                 @endforeach

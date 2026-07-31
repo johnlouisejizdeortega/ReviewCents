@@ -14,14 +14,14 @@
                 </div>
                 <div>
                     <x-input-label for="icon" value="Icon (emoji)" />
-                    <x-text-input id="icon" name="icon" class="mt-1 block w-full" :value="old('icon', $category->icon)" placeholder="💻" />
+                    <x-text-input id="icon" name="icon" class="mt-1 block w-full" :value="old('icon', $category->icon)" placeholder="optional" />
                 </div>
                 <div>
                     <x-input-label for="description" value="Description" />
                     <x-text-input id="description" name="description" class="mt-1 block w-full" :value="old('description', $category->description)" />
                 </div>
                 <div class="flex gap-2">
-                    <button class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Save</button>
+                    <button class="px-5 py-2.5 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Save</button>
                     <a href="{{ route('admin.categories.index') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200">Cancel</a>
                 </div>
             </form>

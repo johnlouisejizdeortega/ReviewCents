@@ -23,13 +23,13 @@
                 <p class="mt-2 text-xs text-gray-400">Assigned by {{ $assignment->admin->name }}</p>
 
                 @if ($assignment->status === 'reviewed')
-                    <div class="mt-4 rounded-lg bg-green-50 dark:bg-green-950/40 p-4">
+                    <div class="mt-4 rounded-lg bg-gray-100 dark:bg-gray-800 p-4">
                         <div class="flex items-center gap-2"><span class="text-sm font-medium">Rating:</span> <x-stars :rating="$assignment->rating" /></div>
                         <p class="mt-2 text-sm text-gray-700 dark:text-gray-300"><span class="font-medium">Feedback:</span> {{ $assignment->feedback }}</p>
                         @if ($assignment->submission)<p class="mt-2 text-xs text-gray-500">Your submission: {{ $assignment->submission }}</p>@endif
                     </div>
                 @elseif ($assignment->status === 'submitted')
-                    <div class="mt-3 rounded-lg bg-blue-50 dark:bg-blue-950/40 p-3 text-sm text-blue-800 dark:text-blue-200">
+                    <div class="mt-3 rounded-lg bg-gray-100 dark:bg-gray-800 p-3 text-sm text-gray-700 dark:text-gray-300">
                         Submitted — waiting for your mentor's feedback.
                         <p class="mt-1 text-xs text-gray-500">Your submission: {{ $assignment->submission }}</p>
                     </div>
@@ -37,9 +37,9 @@
                     <form method="POST" action="{{ route('assignments.submit', $assignment) }}" class="mt-4 space-y-2">
                         @csrf
                         <textarea name="submission" rows="3" required placeholder="Paste a link or describe your work…"
-                                  class="block w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                  class="block w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white"></textarea>
                         <x-input-error :messages="$errors->get('submission')" />
-                        <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Submit work</button>
+                        <button class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Submit work</button>
                     </form>
                 @endif
             </x-card>

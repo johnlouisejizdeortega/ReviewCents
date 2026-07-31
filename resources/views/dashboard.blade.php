@@ -8,15 +8,14 @@
         {{-- Stat tiles --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach ([
-                ['label' => 'Steps completed', 'value' => $stats['stepsCompleted'], 'icon' => '✅'],
-                ['label' => 'Tests passed', 'value' => $stats['quizzesPassed'], 'icon' => '📝'],
-                ['label' => 'Reviews written', 'value' => $stats['reviews'], 'icon' => '⭐'],
-                ['label' => 'Showcase projects', 'value' => $stats['projects'], 'icon' => '🚀'],
+                ['label' => 'Steps completed', 'value' => $stats['stepsCompleted']],
+                ['label' => 'Tests passed', 'value' => $stats['quizzesPassed']],
+                ['label' => 'Reviews written', 'value' => $stats['reviews']],
+                ['label' => 'Showcase projects', 'value' => $stats['projects']],
             ] as $tile)
                 <x-card class="p-5">
-                    <div class="text-2xl">{{ $tile['icon'] }}</div>
-                    <div class="mt-2 text-2xl font-bold">{{ $tile['value'] }}</div>
-                    <div class="text-xs text-gray-500">{{ $tile['label'] }}</div>
+                    <div class="text-3xl font-bold">{{ $tile['value'] }}</div>
+                    <div class="mt-1 text-xs text-gray-500 uppercase tracking-wide">{{ $tile['label'] }}</div>
                 </x-card>
             @endforeach
         </div>
@@ -32,13 +31,13 @@
                             <span class="text-sm text-gray-500">{{ $item['completion'] }}%</span>
                         </div>
                         <div class="mt-2 h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                            <div class="h-full bg-indigo-600" style="width: {{ $item['completion'] }}%"></div>
+                            <div class="h-full bg-gray-900 dark:bg-white" style="width: {{ $item['completion'] }}%"></div>
                         </div>
                     </x-card>
                 @empty
                     <x-card class="p-6 text-center text-sm text-gray-500">
                         You haven't started a roadmap yet.
-                        <a href="{{ route('roadmaps.index') }}" class="text-indigo-600 font-medium hover:underline">Browse roadmaps →</a>
+                        <a href="{{ route('roadmaps.index') }}" class="text-gray-900 dark:text-white font-medium hover:underline">Browse roadmaps →</a>
                     </x-card>
                 @endforelse
             </section>
@@ -54,7 +53,7 @@
                                 <p class="text-xs text-gray-400">{{ $attempt->created_at->diffForHumans() }}</p>
                             </div>
                             <div class="text-right">
-                                <div class="font-bold {{ $attempt->passed ? 'text-green-600' : 'text-amber-600' }}">{{ $attempt->score }}%</div>
+                                <div class="font-bold {{ $attempt->passed ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400' }}">{{ $attempt->score }}%</div>
                                 @if ($attempt->passed)<x-badge color="green">Passed</x-badge>@else<x-badge color="amber">Retry</x-badge>@endif
                             </div>
                         </div>
@@ -69,7 +68,7 @@
         <section>
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-lg font-bold">Tasks from your mentor</h2>
-                <a href="{{ route('assignments.index') }}" class="text-sm text-indigo-600 hover:underline">View all →</a>
+                <a href="{{ route('assignments.index') }}" class="text-sm text-gray-900 dark:text-white hover:underline">View all →</a>
             </div>
             @forelse ($assignments->take(3) as $assignment)
                 <x-card class="p-4 mb-3">

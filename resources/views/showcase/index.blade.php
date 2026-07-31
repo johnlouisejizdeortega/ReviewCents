@@ -6,7 +6,7 @@
                 <p class="text-sm text-gray-500 mt-1">Projects built by the ReviewCents community.</p>
             </div>
             @auth
-                <a href="{{ route('projects.create') }}" class="hidden sm:inline-flex px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">+ Add project</a>
+                <a href="{{ route('projects.create') }}" class="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">+ Add project</a>
             @endauth
         </div>
     </x-slot>
@@ -16,11 +16,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($projects as $project)
                     <x-card :href="route('showcase.show', $project)" class="overflow-hidden">
-                        <div class="aspect-video bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-950 dark:to-purple-950 flex items-center justify-center">
+                        <div class="aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                             @if ($project->imageUrl())
                                 <img src="{{ $project->imageUrl() }}" alt="" class="h-full w-full object-cover">
                             @else
-                                <span class="text-4xl">🚀</span>
+                                <x-placeholder-icon size="h-10 w-10" />
                             @endif
                         </div>
                         <div class="p-4">

@@ -50,18 +50,18 @@
                     <template x-for="(q, qi) in questions" :key="qi">
                         <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-semibold text-indigo-600" x-text="`Question ${qi+1}`"></span>
-                                <button type="button" @click="questions.splice(qi,1)" x-show="questions.length > 3" class="text-red-500 text-sm">Remove</button>
+                                <span class="text-xs font-semibold text-gray-900 dark:text-white" x-text="`Question ${qi+1}`"></span>
+                                <button type="button" @click="questions.splice(qi,1)" x-show="questions.length > 3" class="text-gray-500 text-sm">Remove</button>
                             </div>
                             <input type="text" :name="`questions[${qi}][question]`" x-model="q.question" placeholder="Question text" required
-                                   class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                   class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                             <p class="mt-2 text-xs text-gray-400">Select the radio for the correct answer.</p>
                             <div class="mt-1 space-y-1">
                                 <template x-for="(opt, oi) in q.options" :key="oi">
                                     <div class="flex items-center gap-2">
-                                        <input type="radio" :name="`questions[${qi}][correct]`" :value="oi" x-model.number="q.correct" class="text-indigo-600 focus:ring-indigo-500">
+                                        <input type="radio" :name="`questions[${qi}][correct]`" :value="oi" x-model.number="q.correct" class="text-gray-900 dark:text-white focus:ring-gray-900 dark:focus:ring-white">
                                         <input type="text" :name="`questions[${qi}][options][${oi}]`" x-model="q.options[oi]" placeholder="Option" required
-                                               class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                               class="flex-1 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                                     </div>
                                 </template>
                             </div>
@@ -69,10 +69,10 @@
                     </template>
                 </div>
 
-                <button type="button" @click="questions.push({question:'',options:['','','',''],correct:0})" class="mt-3 text-sm text-indigo-600 hover:underline">+ Add question</button>
+                <button type="button" @click="questions.push({question:'',options:['','','',''],correct:0})" class="mt-3 text-sm text-gray-900 dark:text-white hover:underline">+ Add question</button>
 
                 <div class="mt-6 flex gap-2">
-                    <button class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Save test</button>
+                    <button class="px-5 py-2.5 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Save test</button>
                     <a href="{{ route('admin.roadmaps.index') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200">Cancel</a>
                 </div>
             </form>

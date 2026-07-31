@@ -15,7 +15,7 @@
                         <x-badge :color="$submission->status === 'reviewed' ? 'green' : 'amber'">{{ ucfirst($submission->status) }}</x-badge>
                     </div>
                     @if ($submission->submission_url)
-                        <a href="{{ $submission->submission_url }}" target="_blank" class="mt-2 inline-flex text-sm text-indigo-600 hover:underline">{{ $submission->submission_url }} ↗</a>
+                        <a href="{{ $submission->submission_url }}" target="_blank" class="mt-2 inline-flex text-sm text-gray-900 dark:text-white hover:underline">{{ $submission->submission_url }} ↗</a>
                     @endif
                     @if ($submission->notes)<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{{ $submission->notes }}</p>@endif
 
@@ -28,12 +28,12 @@
                             @csrf @method('PATCH')
                             <div>
                                 <label class="block text-sm font-medium mb-1">Rating</label>
-                                <select name="rating" class="rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="rating" class="rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                                     @for ($i = 1; $i <= 5; $i++)<option value="{{ $i }}">{{ $i }} ★</option>@endfor
                                 </select>
                             </div>
-                            <textarea name="feedback" rows="2" placeholder="Feedback…" required class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                            <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Rate &amp; send feedback</button>
+                            <textarea name="feedback" rows="2" placeholder="Feedback…" required class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white"></textarea>
+                            <button class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Rate &amp; send feedback</button>
                         </form>
                     @endif
                 </x-card>

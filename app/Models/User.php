@@ -39,7 +39,7 @@ class User extends Authenticatable
             return Storage::url($this->avatar_path);
         }
 
-        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=4f46e5&color=fff';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=111111&color=fff';
     }
 
     public function reviews(): HasMany

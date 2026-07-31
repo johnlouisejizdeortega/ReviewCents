@@ -13,8 +13,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('head')
     </head>
-    <body class="h-full font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-        <div class="min-h-full flex flex-col">
+    <body class="h-full font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+        <div class="min-h-full flex flex-col w-full max-w-full">
             @include('layouts.navigation')
 
             @isset($header)
@@ -29,12 +29,12 @@
             @if (session('success') || session('error'))
                 <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-4">
                     @if (session('success'))
-                        <div class="rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-800 dark:text-green-200">
+                        <div class="rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-800 dark:text-gray-200">
                             {{ session('success') }}
                         </div>
                     @endif
                     @if (session('error'))
-                        <div class="rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-800 dark:text-red-200">
+                        <div class="rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-800 dark:text-gray-200">
                             {{ session('error') }}
                         </div>
                     @endif

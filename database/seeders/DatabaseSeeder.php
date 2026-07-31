@@ -55,14 +55,13 @@ class DatabaseSeeder extends Seeder
 
         // ---- Categories --------------------------------------------------
         $categories = collect([
-            ['name' => 'Web Development', 'icon' => '💻', 'description' => 'Frontend & backend web development.'],
-            ['name' => 'Web Design', 'icon' => '🎨', 'description' => 'UI/UX, layout, and visual design.'],
-            ['name' => 'Tools', 'icon' => '🛠️', 'description' => 'Editors, CLIs and developer tooling.'],
-            ['name' => 'Bootcamps', 'icon' => '🚀', 'description' => 'Structured intensive programs.'],
+            ['name' => 'Web Development', 'description' => 'Frontend & backend web development.'],
+            ['name' => 'Web Design', 'description' => 'UI/UX, layout, and visual design.'],
+            ['name' => 'Tools', 'description' => 'Editors, CLIs and developer tooling.'],
+            ['name' => 'Bootcamps', 'description' => 'Structured intensive programs.'],
         ])->map(fn ($c) => Category::create([
             'name' => $c['name'],
             'slug' => Str::slug($c['name']),
-            'icon' => $c['icon'],
             'description' => $c['description'],
         ]));
 

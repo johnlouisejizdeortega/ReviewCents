@@ -2,7 +2,7 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <x-card class="p-6">
             <div class="flex items-center gap-4">
-                <img src="{{ $user->avatarUrl() }}" class="h-20 w-20 rounded-full object-cover ring-2 ring-indigo-100 dark:ring-indigo-900" alt="">
+                <img src="{{ $user->avatarUrl() }}" class="h-20 w-20 rounded-full object-cover ring-2 ring-gray-200 dark:ring-gray-700" alt="">
                 <div>
                     <h1 class="text-2xl font-bold">{{ $user->name }}</h1>
                     <p class="text-sm text-gray-500">@{{ $user->username }}</p>
@@ -19,7 +19,7 @@
                 @if (auth()->id() !== $user->id)
                     <form method="POST" action="{{ route('chat.start', $user) }}" class="mt-4">
                         @csrf
-                        <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Message</button>
+                        <button class="px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Message</button>
                     </form>
                 @endif
             @endauth
@@ -31,7 +31,7 @@
                 <h2 class="text-lg font-bold mb-3">Achievements</h2>
                 <div class="flex flex-wrap gap-2">
                     @foreach ($passedQuizzes as $attempt)
-                        <x-badge color="green">🏅 {{ $attempt->quiz->roadmap->title ?? 'Quiz' }}</x-badge>
+                        <x-badge color="green">{{ $attempt->quiz->roadmap->title ?? 'Quiz' }}</x-badge>
                     @endforeach
                 </div>
             </div>

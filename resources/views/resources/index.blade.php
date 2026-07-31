@@ -8,18 +8,18 @@
         {{-- Filters --}}
         <form method="GET" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Search…"
-                   class="col-span-2 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-            <select name="category" class="rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                   class="col-span-2 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
+            <select name="category" class="rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                 <option value="">All categories</option>
                 @foreach ($categories as $cat)
                     <option value="{{ $cat->slug }}" @selected(($filters['category'] ?? '') === $cat->slug)>{{ $cat->name }}</option>
                 @endforeach
             </select>
-            <select name="sort" onchange="this.form.submit()" class="rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select name="sort" onchange="this.form.submit()" class="rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
                 <option value="top" @selected(($filters['sort'] ?? 'top') === 'top')>Top rated</option>
                 <option value="new" @selected(($filters['sort'] ?? '') === 'new')>Newest</option>
             </select>
-            <button class="col-span-2 sm:col-span-4 sm:w-auto sm:justify-self-start px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Apply filters</button>
+            <button class="col-span-2 sm:col-span-4 sm:w-auto sm:justify-self-start px-4 py-2 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Apply filters</button>
         </form>
 
         @if ($resources->count())
@@ -27,7 +27,7 @@
                 @foreach ($resources as $resource)
                     <x-card :href="route('resources.show', $resource)" class="p-5">
                         <div class="flex items-center justify-between">
-                            <x-badge color="indigo">{{ $resource->category->icon }} {{ $resource->category->name }}</x-badge>
+                            <x-badge color="indigo">{{ $resource->category->name }}</x-badge>
                             <x-badge>{{ ucfirst($resource->type) }}</x-badge>
                         </div>
                         <h3 class="mt-3 font-semibold">{{ $resource->title }}</h3>

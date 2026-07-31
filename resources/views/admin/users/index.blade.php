@@ -15,7 +15,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <x-badge :color="$user->role === 'admin' ? 'amber' : 'gray'">{{ ucfirst($user->role) }}</x-badge>
-                        <a href="{{ route('admin.assignments.create', ['user' => $user->id]) }}" class="text-sm text-indigo-600 hover:underline">Assign task</a>
+                        <a href="{{ route('admin.assignments.create', ['user' => $user->id]) }}" class="text-sm text-gray-900 dark:text-white hover:underline">Assign task</a>
                     </div>
                 </div>
             @endforeach

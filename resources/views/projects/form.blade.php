@@ -6,7 +6,7 @@
     </div>
     <div>
         <x-input-label for="description" value="Description" />
-        <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $project->description) }}</textarea>
+        <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">{{ old('description', $project->description) }}</textarea>
         <x-input-error :messages="$errors->get('description')" class="mt-1" />
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -30,7 +30,7 @@
         @if ($project->imageUrl())
             <img src="{{ $project->imageUrl() }}" class="mt-1 h-32 rounded-lg object-cover" alt="">
         @endif
-        <input id="image" name="image" type="file" accept="image/*" class="mt-1 block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-indigo-700 hover:file:bg-indigo-100" />
+        <input id="image" name="image" type="file" accept="image/*" class="mt-1 block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-1.5 file:text-gray-900 dark:text-gray-100 hover:file:bg-gray-200 dark:bg-gray-800" />
         <x-input-error :messages="$errors->get('image')" class="mt-1" />
     </div>
 </div>

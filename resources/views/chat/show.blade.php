@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="flex items-center gap-3 mb-4">
-            <a href="{{ route('chat.index') }}" class="text-sm text-indigo-600 hover:underline">←</a>
+            <a href="{{ route('chat.index') }}" class="text-sm text-gray-900 dark:text-white hover:underline">←</a>
             <h1 class="text-lg font-bold">{{ $conversation->titleFor(auth()->user()) }}</h1>
         </div>
 
@@ -20,7 +20,7 @@
                             @if ($message->user_id !== auth()->id())
                                 <p class="text-xs text-gray-400 mb-0.5">{{ $message->user->name }}</p>
                             @endif
-                            <div class="px-4 py-2 rounded-2xl text-sm {{ $message->user_id === auth()->id() ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-gray-100 dark:bg-gray-800 rounded-bl-sm' }}">
+                            <div class="px-4 py-2 rounded-2xl text-sm {{ $message->user_id === auth()->id() ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-br-sm' : 'bg-gray-100 dark:bg-gray-800 rounded-bl-sm' }}">
                                 {{ $message->body }}
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                     <div class="flex" :class="msg.user_id === meId ? 'justify-end' : 'justify-start'">
                         <div class="max-w-[75%]">
                             <p class="text-xs text-gray-400 mb-0.5" x-show="msg.user_id !== meId" x-text="msg.user_name"></p>
-                            <div class="px-4 py-2 rounded-2xl text-sm" :class="msg.user_id === meId ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-gray-100 dark:bg-gray-800 rounded-bl-sm'" x-text="msg.body"></div>
+                            <div class="px-4 py-2 rounded-2xl text-sm" :class="msg.user_id === meId ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-br-sm' : 'bg-gray-100 dark:bg-gray-800 rounded-bl-sm'" x-text="msg.body"></div>
                         </div>
                     </div>
                 </template>
@@ -40,8 +40,8 @@
             {{-- Composer --}}
             <form @submit.prevent="send" class="border-t border-gray-200 dark:border-gray-800 p-3 flex gap-2">
                 <input x-model="draft" type="text" placeholder="Type a message…" required
-                       class="flex-1 rounded-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <button type="submit" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Send</button>
+                       class="flex-1 rounded-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm focus:border-gray-900 dark:focus:border-white focus:ring-gray-900 dark:focus:ring-white">
+                <button type="submit" class="px-4 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-200">Send</button>
             </form>
         </x-card>
         <p class="mt-2 text-xs text-gray-400 text-center">Messages update live when Reverb is running (<code>php artisan reverb:start</code>).</p>

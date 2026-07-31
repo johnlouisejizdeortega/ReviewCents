@@ -28,7 +28,7 @@
             <section>
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold">Submissions to review</h2>
-                    <a href="{{ route('admin.submissions.index') }}" class="text-sm text-indigo-600 hover:underline">All →</a>
+                    <a href="{{ route('admin.submissions.index') }}" class="text-sm text-gray-900 dark:text-white hover:underline">All →</a>
                 </div>
                 @forelse ($pendingSubmissions as $sub)
                     <x-card class="p-4 mb-2">
@@ -37,7 +37,7 @@
                                 <h3 class="font-semibold text-sm">{{ $sub->challenge->title }}</h3>
                                 <p class="text-xs text-gray-500">by {{ $sub->user->name }}</p>
                             </div>
-                            <a href="{{ route('admin.submissions.index') }}" class="text-xs font-medium text-indigo-600 hover:underline">Review</a>
+                            <a href="{{ route('admin.submissions.index') }}" class="text-xs font-medium text-gray-900 dark:text-white hover:underline">Review</a>
                         </div>
                     </x-card>
                 @empty
@@ -48,7 +48,7 @@
             <section>
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-lg font-bold">Open assignments</h2>
-                    <a href="{{ route('admin.assignments.create') }}" class="text-sm text-indigo-600 hover:underline">+ Assign</a>
+                    <a href="{{ route('admin.assignments.create') }}" class="text-sm text-gray-900 dark:text-white hover:underline">+ Assign</a>
                 </div>
                 @forelse ($openAssignments as $a)
                     <x-card class="p-4 mb-2">

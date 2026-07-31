@@ -6,9 +6,9 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <form method="GET" class="flex flex-wrap gap-2 mb-6">
-            <a href="{{ route('roadmaps.index') }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ empty($filters['category']) ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">All</a>
+            <a href="{{ route('roadmaps.index') }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ empty($filters['category']) ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">All</a>
             @foreach ($categories as $cat)
-                <a href="{{ route('roadmaps.index', ['category' => $cat->slug]) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['category'] ?? '') === $cat->slug ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">{{ $cat->icon }} {{ $cat->name }}</a>
+                <a href="{{ route('roadmaps.index', ['category' => $cat->slug]) }}" class="px-3 py-1.5 rounded-full text-sm font-medium {{ ($filters['category'] ?? '') === $cat->slug ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">{{ $cat->name }}</a>
             @endforeach
         </form>
 
@@ -17,7 +17,7 @@
                 @foreach ($roadmaps as $roadmap)
                     <x-card :href="route('roadmaps.show', $roadmap)" class="p-5">
                         <div class="flex items-center justify-between">
-                            <x-badge color="indigo">{{ $roadmap->category->icon }} {{ $roadmap->category->name }}</x-badge>
+                            <x-badge color="indigo">{{ $roadmap->category->name }}</x-badge>
                             <x-badge :color="['beginner'=>'green','intermediate'=>'amber','advanced'=>'red'][$roadmap->level]">{{ ucfirst($roadmap->level) }}</x-badge>
                         </div>
                         <h3 class="mt-3 font-semibold">{{ $roadmap->title }}</h3>
@@ -28,7 +28,7 @@
                             @if ($c > 0)
                                 <div class="mt-3">
                                     <div class="h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                                        <div class="h-full bg-indigo-600" style="width: {{ $c }}%"></div>
+                                        <div class="h-full bg-gray-900 dark:bg-white" style="width: {{ $c }}%"></div>
                                     </div>
                                     <p class="mt-1 text-xs text-gray-400">{{ $c }}% complete</p>
                                 </div>
